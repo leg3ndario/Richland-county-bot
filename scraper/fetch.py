@@ -41,9 +41,9 @@ COUNTY          = "Richland"
 STATE           = "SC"
 
 # Richland County Register of Deeds – iDoc public search portal
-ROD_BASE        = "https://rod.richlandcountysc.gov"
-ROD_SEARCH_URL  = f"{ROD_BASE}/RodPublic/SearchForms/DocumentTypeSearch.aspx"
-ROD_DOC_BASE    = f"{ROD_BASE}/RodPublic/SearchResults/DocumentSearch.aspx"
+ROD_BASE        = "https://publicindex.sccourts.org/richland/publicindex/"
+ROD_SEARCH_URL  = f"{ROD_BASE}/PISearch.aspx"
+ROD_DOC_BASE    = f"{ROD_BASE}/PISearch.aspx"
 
 # ArcGIS REST endpoint for Richland County parcels (public FeatureServer)
 ARCGIS_PARCEL_URL = (
