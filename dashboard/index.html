@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richland County SC – Motivated Seller Leads</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #242840;
+    --border: #2e3250;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --green: #2dd4bf;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  header h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  header h1 span { color: var(--accent); }
+  .meta { font-size: 12px; color: var(--muted); }
+
+  /* ── Stats bar ── */
+  .stats {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    min-width: 120px;
+  }
+  .stat-card .val { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    padding: 0 24px 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  input[type="text"], select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 7px 12px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  input[type="text"]:focus, select:focus { border-color: var(--accent); }
+  input#search { width: 240px; }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity .15s;
+  }
+  button:hover { opacity: .85; }
+  button.secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    padding: 0 24px 40px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: var(--surface);
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: .05em;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; color: var(--accent); }
+  thead th.sort-desc::after { content: " ▼"; color: var(--accent); }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+  }
+  tbody tr:hover { background: var(--surface2); }
+  td { padding: 10px 12px; vertical-align: top; max-width: 220px; }
+  td.score-cell { font-weight: 700; font-size: 16px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Score pill ── */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .score-high   { background: rgba(45,212,191,.15); color: var(--green); border: 2px solid var(--green); }
+  .score-med    { background: rgba(251,191,36,.12);  color: var(--yellow);border: 2px solid var(--yellow);}
+  .score-low    { background: rgba(248,113,113,.12); color: var(--red);   border: 2px solid var(--red); }
+
+  /* ── Flag chips ── */
+  .flags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .flag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 100px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .flag-preforeclosure { background: rgba(248,113,113,.2); color: var(--red); }
+  .flag-judgment       { background: rgba(251,191,36,.2);  color: var(--yellow); }
+  .flag-tax            { background: rgba(108,99,255,.2);  color: var(--accent); }
+  .flag-lien           { background: rgba(45,212,191,.2);  color: var(--green); }
+  .flag-probate        { background: rgba(255,101,132,.2); color: var(--accent2); }
+  .flag-other          { background: rgba(148,163,184,.15);color: var(--muted); }
+
+  /* ── Empty state ── */
+  .empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--muted);
+  }
+  .empty svg { opacity: .3; margin-bottom: 16px; }
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 24px 24px;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    min-width: 36px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .pagination button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s ease;
+    z-index: 999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Richland County SC — <span>Motivated Seller Leads</span></h1>
+    <div class="meta" id="meta">Loading…</div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button onclick="exportCSV()">⬇ Export CSV (GHL)</button>
+    <button class="secondary" onclick="location.reload()">↺ Refresh</button>
+  </div>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Search owner, address, doc #…">
+  <select id="filterType">
+    <option value="">All Doc Types</option>
+  </select>
+  <select id="filterCat">
+    <option value="">All Categories</option>
+    <option value="preforeclosure">Pre-Foreclosure</option>
+    <option value="judgment">Judgment</option>
+    <option value="tax_lien">Tax Lien</option>
+    <option value="lien">Lien</option>
+    <option value="probate">Probate</option>
+    <option value="tax">Tax Deed</option>
+    <option value="construction">Notice of Commencement</option>
+    <option value="release">Release</option>
+  </select>
+  <select id="filterScore">
+    <option value="0">All Scores</option>
+    <option value="60">Score ≥ 60</option>
+    <option value="50">Score ≥ 50</option>
+    <option value="40">Score ≥ 40</option>
+  </select>
+  <select id="pageSize">
+    <option value="25">25/page</option>
+    <option value="50">50/page</option>
+    <option value="100">100/page</option>
+  </select>
+  <span id="countLabel" style="color:var(--muted);font-size:12px;margin-left:auto;"></span>
+</div>
+
+<div class="table-wrap">
+  <table id="leadsTable">
+    <thead>
+      <tr>
+        <th onclick="sortBy('score')">Score</th>
+        <th onclick="sortBy('filed')">Filed</th>
+        <th onclick="sortBy('doc_type')">Type</th>
+        <th onclick="sortBy('owner')">Owner / Grantor</th>
+        <th onclick="sortBy('prop_address')">Property Address</th>
+        <th onclick="sortBy('mail_address')">Mailing Address</th>
+        <th onclick="sortBy('amount')">Amount</th>
+        <th>Flags</th>
+        <th>Doc #</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div class="empty" id="emptyState" style="display:none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <p>No leads found matching your filters.</p>
+  </div>
+</div>
+
+<div class="pagination" id="pagination"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+let allRecords = [];
+let filtered   = [];
+let sortKey    = 'score';
+let sortDir    = 'desc';
+let currentPage= 1;
+
+const FLAG_CLASS = {
+  'Lis pendens':       'flag-preforeclosure',
+  'Pre-foreclosure':   'flag-preforeclosure',
+  'Judgment lien':     'flag-judgment',
+  'Tax lien':          'flag-tax',
+  'Mechanic lien':     'flag-lien',
+  'HOA lien':          'flag-lien',
+  'Probate / estate':  'flag-probate',
+  'LLC / corp owner':  'flag-other',
+  'New this week':     'flag-other',
+};
+
+async function loadData() {
+  try {
+    const r = await fetch('records.json?' + Date.now());
+    const d = await r.json();
+    allRecords = d.records || [];
+
+    // Meta bar
+    const from = d.date_range?.from || '—';
+    const to   = d.date_range?.to   || '—';
+    const fetched = d.fetched_at
+      ? new Date(d.fetched_at).toLocaleString()
+      : '—';
+    document.getElementById('meta').textContent =
+      `Last updated: ${fetched} · Range: ${from} – ${to}`;
+
+    // Stats
+    renderStats(d);
+
+    // Populate doc-type filter
+    const types = [...new Set(allRecords.map(r => r.doc_type))].sort();
+    const sel   = document.getElementById('filterType');
+    types.forEach(t => {
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t;
+      sel.appendChild(o);
+    });
+
+    applyFilters();
+  } catch(e) {
+    document.getElementById('meta').textContent = 'Error loading records.json';
+    console.error(e);
+  }
+}
+
+function renderStats(d) {
+  const recs  = d.records || [];
+  const high  = recs.filter(r => r.score >= 60).length;
+  const prefc = recs.filter(r => r.cat === 'preforeclosure').length;
+  const jud   = recs.filter(r => r.cat === 'judgment').length;
+  const lien  = recs.filter(r => ['tax_lien','lien'].includes(r.cat)).length;
+  const addr  = recs.filter(r => r.prop_address).length;
+
+  const cards = [
+    { val: d.total || 0,  lbl: 'Total Leads' },
+    { val: high,          lbl: 'Score ≥ 60' },
+    { val: prefc,         lbl: 'Pre-Foreclosure' },
+    { val: jud,           lbl: 'Judgments' },
+    { val: lien,          lbl: 'Liens' },
+    { val: addr,          lbl: 'Have Address' },
+  ];
+  document.getElementById('stats').innerHTML = cards.map(c =>
+    `<div class="stat-card"><div class="val">${c.val}</div><div class="lbl">${c.lbl}</div></div>`
+  ).join('');
+}
+
+function applyFilters() {
+  const q       = document.getElementById('search').value.toLowerCase();
+  const typeF   = document.getElementById('filterType').value;
+  const catF    = document.getElementById('filterCat').value;
+  const scoreF  = parseInt(document.getElementById('filterScore').value) || 0;
+
+  filtered = allRecords.filter(r => {
+    if (typeF  && r.doc_type !== typeF)         return false;
+    if (catF   && r.cat !== catF)               return false;
+    if (r.score < scoreF)                       return false;
+    if (q) {
+      const haystack = [
+        r.owner, r.grantee, r.doc_num, r.prop_address, r.mail_address,
+        r.legal, r.doc_type, r.cat_label
+      ].join(' ').toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  filtered.sort((a, b) => {
+    let va = a[sortKey]; let vb = b[sortKey];
+    if (va == null) va = ''; if (vb == null) vb = '';
+    if (typeof va === 'number') return sortDir === 'asc' ? va - vb : vb - va;
+    va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+    return sortDir === 'asc'
+      ? va.localeCompare(vb)
+      : vb.localeCompare(va);
+  });
+
+  currentPage = 1;
+  document.getElementById('countLabel').textContent =
+    `${filtered.length} of ${allRecords.length} leads`;
+  renderTable();
+  renderPagination();
+}
+
+function renderTable() {
+  const ps   = parseInt(document.getElementById('pageSize').value) || 25;
+  const start= (currentPage - 1) * ps;
+  const page = filtered.slice(start, start + ps);
+  const tbody= document.getElementById('tableBody');
+  const empty= document.getElementById('emptyState');
+
+  if (!filtered.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = page.map(r => {
+    const sc   = r.score || 0;
+    const cls  = sc >= 60 ? 'score-high' : sc >= 40 ? 'score-med' : 'score-low';
+    const flags= (r.flags || []).map(f =>
+      `<span class="flag ${FLAG_CLASS[f] || 'flag-other'}">${f}</span>`
+    ).join('');
+    const amt  = r.amount != null
+      ? '$' + Number(r.amount).toLocaleString()
+      : '—';
+    const propAddr = [r.prop_address, r.prop_city, r.prop_zip]
+      .filter(Boolean).join(', ') || '—';
+    const mailAddr = [r.mail_address, r.mail_city, r.mail_state, r.mail_zip]
+      .filter(Boolean).join(', ') || '—';
+    const docLink = r.clerk_url
+      ? `<a href="${r.clerk_url}" target="_blank">${r.doc_num || 'View'}</a>`
+      : (r.doc_num || '—');
+
+    return `<tr>
+      <td class="score-cell"><span class="score-badge ${cls}">${sc}</span></td>
+      <td>${r.filed || '—'}</td>
+      <td><strong>${r.doc_type}</strong><br><span style="color:var(--muted);font-size:11px">${r.cat_label || ''}</span></td>
+      <td>${esc(r.owner || '—')}<br><span style="color:var(--muted);font-size:11px">${esc(r.grantee || '')}</span></td>
+      <td style="font-size:12px">${esc(propAddr)}</td>
+      <td style="font-size:12px">${esc(mailAddr)}</td>
+      <td style="white-space:nowrap">${amt}</td>
+      <td><div class="flags">${flags}</div></td>
+      <td style="white-space:nowrap">${docLink}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPagination() {
+  const ps    = parseInt(document.getElementById('pageSize').value) || 25;
+  const total = Math.ceil(filtered.length / ps);
+  const pg    = document.getElementById('pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+
+  let html = '';
+  const lo = Math.max(1, currentPage - 3);
+  const hi = Math.min(total, currentPage + 3);
+  if (lo > 1) html += `<button onclick="goPage(1)">1</button>`;
+  if (lo > 2) html += `<button disabled>…</button>`;
+  for (let i = lo; i <= hi; i++) {
+    html += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  if (hi < total - 1) html += `<button disabled>…</button>`;
+  if (hi < total)     html += `<button onclick="goPage(${total})">${total}</button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(n) {
+  currentPage = n;
+  renderTable();
+  renderPagination();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function sortBy(key) {
+  if (sortKey === key) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey = key;
+    sortDir = key === 'score' ? 'desc' : 'asc';
+  }
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+  });
+  // find matching th – primitive approach
+  document.querySelectorAll('thead th').forEach(th => {
+    const match = th.getAttribute('onclick') === `sortBy('${key}')`;
+    if (match) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+  applyFilters();
+}
+
+function exportCSV() {
+  const cols = [
+    'First Name','Last Name',
+    'Mailing Address','Mailing City','Mailing State','Mailing Zip',
+    'Property Address','Property City','Property State','Property Zip',
+    'Lead Type','Document Type','Date Filed','Document Number',
+    'Amount/Debt Owed','Seller Score','Motivated Seller Flags',
+    'Source','Public Records URL'
+  ];
+  const rows = [cols.join(',')];
+  filtered.forEach(r => {
+    const parts = (r.owner || '').split(' ');
+    const fn = parts[0] || '';
+    const ln = parts.slice(1).join(' ');
+    const row = [
+      fn, ln,
+      r.mail_address || '', r.mail_city || '', r.mail_state || 'SC', r.mail_zip || '',
+      r.prop_address || '', r.prop_city || '', r.prop_state || 'SC', r.prop_zip || '',
+      r.cat_label || '', r.doc_type || '', r.filed || '', r.doc_num || '',
+      r.amount != null ? r.amount : '',
+      r.score || 0,
+      (r.flags || []).join('; '),
+      'Richland County ROD',
+      r.clerk_url || ''
+    ].map(v => `"${String(v).replace(/"/g,'""')}"`);
+    rows.push(row.join(','));
+  });
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `richland_leads_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast(`Exported ${filtered.length} leads to CSV`);
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Event listeners
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('filterType').addEventListener('change', applyFilters);
+document.getElementById('filterCat').addEventListener('change', applyFilters);
+document.getElementById('filterScore').addEventListener('change', applyFilters);
+document.getElementById('pageSize').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+  renderPagination();
+});
+
+loadData();
+</script>
+</body>
+</html>
